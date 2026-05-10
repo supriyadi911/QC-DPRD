@@ -83,6 +83,26 @@
         /* Tab Animation */
         .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Smooth Marquee (Running Text) */
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .marquee-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee-scroll 25s linear infinite;
+            will-change: transform; /* Hardware Acceleration untuk animasi mulus */
+        }
+        .marquee-content:hover {
+            animation-play-state: paused;
+        }
+        @keyframes marquee-scroll {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 dark:bg-darkbg dark:text-gray-200">
@@ -161,8 +181,9 @@
                     <div class="bg-yellow-500 text-blue-900 font-bold text-[10px] md:text-xs px-2 md:px-3 py-1.5 uppercase tracking-widest shrink-0 shadow-md relative z-10 flex items-center">
                         <i class="fa-solid fa-bullhorn mr-1 md:mr-2"></i> INFO
                     </div>
-                    <div class="overflow-hidden flex-grow px-2 md:px-4 py-1.5 text-xs md:text-sm font-medium tracking-wide">
-                        <marquee id="public-running-text" scrollamount="6" onmouseover="this.stop();" onmouseout="this.start();">Selamat Datang di Sistem Informasi Quick Count dan Real Count Pilkada 2026. Pantau terus pergerakan perolehan suara terkini dari seluruh TPS.</marquee>
+                    <!-- Menggunakan container dan animasi CSS modern -->
+                    <div class="marquee-container flex-grow px-2 md:px-4 py-1.5 text-xs md:text-sm font-medium tracking-wide">
+                        <div id="public-running-text" class="marquee-content">Selamat Datang di Sistem Informasi Quick Count dan Real Count Pilkada 2026. Pantau terus pergerakan perolehan suara terkini dari seluruh TPS.</div>
                     </div>
                 </div>
             </div>
@@ -1392,7 +1413,7 @@
             // Hal ini mencegah marquee mereset ke awal setiap kali auto-refresh (10 detik) terjadi.
             const runningTextEl = document.getElementById('public-running-text');
             const newRunningText = appData.config.running_text || "Selamat Datang di Sistem Informasi Quick Count dan Real Count.";
-            if (runningTextEl.textContent !== newRunningText) {
+            if (runningTextEl.textContent.trim() !== newRunningText.trim()) {
                 runningTextEl.textContent = newRunningText;
             }
 
