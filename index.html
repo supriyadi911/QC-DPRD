@@ -34,7 +34,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <style>
-        html, body { overflow-x: hidden; width: 100%; }
+        /* Menggunakan overflow-x: clip; sebagai standar modern agar tidak memblokir elemen fixed/sticky */
+        html, body { overflow-x: clip; width: 100%; }
         body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
         
         /* Custom Scrollbar */
@@ -103,6 +104,31 @@
             0% { transform: translate3d(0, 0, 0); }
             100% { transform: translate3d(-100%, 0, 0); }
         }
+
+        /* Sticky Header Shrink Transitions */
+        .is-shrunk #header-inner { padding-top: 4px !important; padding-bottom: 4px !important; }
+        .is-shrunk #app-title { font-size: 9px !important; margin-bottom: 0 !important; }
+        .is-shrunk #app-subtitle { display: none !important; opacity: 0; }
+        .is-shrunk #header-icon-container { padding: 4px !important; border-radius: 4px !important; }
+        .is-shrunk #header-icon { font-size: 12px !important; }
+        .is-shrunk #realtime-clock { font-size: 12px !important; }
+        .is-shrunk #realtime-date { display: none !important; }
+        .is-shrunk #header-datetime { margin-top: 0 !important; }
+        .is-shrunk #running-info-badge { padding-top: 2px !important; padding-bottom: 2px !important; font-size: 8px !important; }
+        .is-shrunk #running-text-wrap { padding-top: 2px !important; padding-bottom: 2px !important; font-size: 10px !important; }
+
+        @media (min-width: 640px) { /* sm */
+            .is-shrunk #app-title { font-size: 14px !important; }
+            .is-shrunk #header-icon { font-size: 16px !important; }
+            .is-shrunk #running-info-badge { font-size: 10px !important; }
+            .is-shrunk #running-text-wrap { font-size: 12px !important; }
+            .is-shrunk #realtime-clock { font-size: 14px !important; }
+        }
+
+        @media (min-width: 768px) { /* md */
+            .is-shrunk #app-title { font-size: 18px !important; }
+            .is-shrunk #header-icon { font-size: 20px !important; }
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 dark:bg-darkbg dark:text-gray-200">
@@ -116,81 +142,87 @@
         <!-- Menggunakan min-h-[100dvh] untuk mencegah bocor vertikal di mobile browser -->
         <div id="app-container" class="min-h-[100dvh] flex flex-col hidden relative w-full">
             
-            <!-- Header Publik -->
-            <header class="bg-primary text-white shadow-lg sticky top-0 z-50">
-                <!-- Padding sangat minim di HP (px-1.5) -->
-                <div class="container mx-auto px-1.5 sm:px-4 py-1.5 md:py-3">
-                    <div class="flex flex-row justify-between items-center gap-1 md:gap-4">
-                        
-                        <!-- Area Kiri: Logo dan Judul (flex-1 dan min-w-0 MEMAKSA teks memendek/truncate) -->
-                        <div class="flex items-center gap-1.5 sm:gap-4 min-w-0 flex-1">
-                            <div class="bg-white p-1 sm:p-2 rounded sm:rounded-lg shrink-0 flex items-center justify-center">
-                                <i class="fa-solid fa-chart-pie text-xs sm:text-2xl md:text-3xl text-primary"></i>
-                            </div>
-                            <div class="min-w-0 flex-1 flex flex-col justify-center">
-                                <!-- Font ekstra kecil untuk HP (10px) -->
-                                <h1 class="text-[10px] sm:text-xl md:text-3xl font-black tracking-tighter uppercase truncate leading-none" id="app-title">QC PILKADA 2026</h1>
-                                <!-- Subtitle mikroskopis untuk HP (7px) agar tetap sebaris -->
-                                <p class="text-[7px] sm:text-xs md:text-base text-blue-200 truncate leading-tight mt-0.5 sm:mt-1" id="app-subtitle">Pemilihan Anggota DPRD Provinsi - Lembaga Survei Independen</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Area Kanan: Tombol-tombol (shrink-0 MEMAKSA area ini tidak terdorong keluar) -->
-                        <div class="flex flex-col items-end shrink-0 pl-1">
-                            <!-- Baris Atas: Ikon Status, Tema, Fullscreen, Admin -->
-                            <div class="flex items-center gap-1 sm:gap-2">
-                                
-                                <!-- Indikator Database (Sangat kecil di HP: w-3 h-3) -->
-                                <div class="flex items-center justify-center bg-black/20 w-3 h-3 sm:w-8 sm:h-8 rounded-full border border-white/10" title="Database Status">
-                                    <span class="relative flex h-1.5 w-1.5 sm:h-2.5 sm:w-2.5">
-                                      <span id="db-ping-public" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
-                                      <span id="db-dot-public" class="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2.5 sm:w-2.5 bg-yellow-500"></span>
-                                    </span>
+            <!-- Top Bar Wrapper for Sticky & Shrink -->
+            <!-- Menggunakan fixed agar dijamin menetap di atas tanpa terpengaruh guliran konten -->
+            <div id="public-top-bar" class="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 shadow-lg">
+                
+                <!-- Header Publik -->
+                <header class="bg-primary text-white border-b border-white/10 transition-all duration-300" id="main-header">
+                    <!-- Padding sangat minim di HP (px-1.5) -->
+                    <div class="container mx-auto px-1.5 sm:px-4 py-1.5 md:py-3 transition-all duration-300" id="header-inner">
+                        <div class="flex flex-row justify-between items-center gap-1 md:gap-4">
+                            
+                            <!-- Area Kiri: Logo dan Judul (flex-1 dan min-w-0 MEMAKSA teks memendek/truncate) -->
+                            <div class="flex items-center gap-1.5 sm:gap-4 min-w-0 flex-1">
+                                <div id="header-icon-container" class="bg-white p-1 sm:p-2 rounded sm:rounded-lg shrink-0 flex items-center justify-center transition-all duration-300">
+                                    <i id="header-icon" class="fa-solid fa-chart-pie text-xs sm:text-2xl md:text-3xl text-primary transition-all duration-300"></i>
                                 </div>
-
-                                <!-- Toggle Auto Refresh (Sangat Kecil 8px) -->
-                                <button onclick="toggleAutoRefresh()" class="p-0.5 sm:p-1.5 hover:bg-blue-800 rounded transition flex items-center gap-1 text-green-400" id="btn-auto-refresh" title="Auto Refresh: ON">
-                                    <i class="fa-solid fa-rotate text-[8px] sm:text-sm"></i>
-                                    <i class="fa-solid fa-toggle-on text-base md:text-xl hidden md:block" id="icon-toggle-refresh"></i>
-                                </button>
-
-                                <button onclick="toggleTheme()" class="p-1 sm:p-2 hover:bg-blue-800 rounded-full transition" title="Toggle Dark/Light Mode">
-                                    <i class="fa-solid fa-moon text-[8px] sm:text-base" id="theme-icon"></i>
-                                </button>
-                                <button onclick="toggleFullscreen()" class="p-1 sm:p-2 hover:bg-blue-800 rounded-full transition hidden sm:block" title="Fullscreen">
-                                    <i class="fa-solid fa-expand text-[8px] sm:text-sm"></i>
-                                </button>
-                                <button onclick="openLoginModal()" class="bg-blue-700 hover:bg-blue-600 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded font-bold text-[8px] sm:text-sm transition flex items-center shadow-sm">
-                                    <i class="fa-solid fa-lock md:mr-2 text-[8px] sm:text-sm"></i> <span class="hidden sm:inline">Admin</span>
-                                </button>
+                                <div class="min-w-0 flex-1 flex flex-col justify-center">
+                                    <!-- Font ekstra kecil untuk HP (10px) -->
+                                    <h1 class="text-[10px] sm:text-xl md:text-3xl font-black tracking-tighter uppercase truncate leading-none transition-all duration-300" id="app-title">QC PILKADA 2026</h1>
+                                    <!-- Subtitle mikroskopis untuk HP (7px) agar tetap sebaris -->
+                                    <p class="text-[7px] sm:text-xs md:text-base text-blue-200 truncate leading-tight mt-0.5 sm:mt-1 transition-all duration-300" id="app-subtitle">Pemilihan Anggota DPRD Provinsi - Lembaga Survei Independen</p>
+                                </div>
                             </div>
                             
-                            <!-- Baris Bawah: Waktu dan Tanggal (Hanya Desktop/Tablet) -->
-                            <div class="text-right hidden sm:block mt-1">
-                                <div class="text-lg font-bold font-mono leading-none tracking-wider" id="realtime-clock">00:00:00</div>
-                                <div class="text-[10px] text-blue-200 mt-0.5 uppercase tracking-wide" id="realtime-date">Tanggal</div>
+                            <!-- Area Kanan: Tombol-tombol (shrink-0 MEMAKSA area ini tidak terdorong keluar) -->
+                            <div class="flex flex-col items-end shrink-0 pl-1">
+                                <!-- Baris Atas: Ikon Status, Tema, Fullscreen, Admin -->
+                                <div class="flex items-center gap-1 sm:gap-2">
+                                    
+                                    <!-- Indikator Database (Sangat kecil di HP: w-3 h-3) -->
+                                    <div class="flex items-center justify-center bg-black/20 w-3 h-3 sm:w-8 sm:h-8 rounded-full border border-white/10" title="Database Status">
+                                        <span class="relative flex h-1.5 w-1.5 sm:h-2.5 sm:w-2.5">
+                                          <span id="db-ping-public" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                                          <span id="db-dot-public" class="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2.5 sm:w-2.5 bg-yellow-500"></span>
+                                        </span>
+                                    </div>
+
+                                    <!-- Toggle Auto Refresh (Sangat Kecil 8px) -->
+                                    <button onclick="toggleAutoRefresh()" class="p-0.5 sm:p-1.5 hover:bg-blue-800 rounded transition flex items-center gap-1 text-green-400" id="btn-auto-refresh" title="Auto Refresh: ON">
+                                        <i class="fa-solid fa-rotate text-[8px] sm:text-sm"></i>
+                                        <i class="fa-solid fa-toggle-on text-base md:text-xl hidden md:block" id="icon-toggle-refresh"></i>
+                                    </button>
+
+                                    <button onclick="toggleTheme()" class="p-1 sm:p-2 hover:bg-blue-800 rounded-full transition" title="Toggle Dark/Light Mode">
+                                        <i class="fa-solid fa-moon text-[8px] sm:text-base" id="theme-icon"></i>
+                                    </button>
+                                    <button onclick="toggleFullscreen()" class="p-1 sm:p-2 hover:bg-blue-800 rounded-full transition hidden sm:block" title="Fullscreen">
+                                        <i class="fa-solid fa-expand text-[8px] sm:text-sm"></i>
+                                    </button>
+                                    <button onclick="openLoginModal()" class="bg-blue-700 hover:bg-blue-600 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded font-bold text-[8px] sm:text-sm transition flex items-center shadow-sm">
+                                        <i class="fa-solid fa-lock md:mr-2 text-[8px] sm:text-sm"></i> <span class="hidden sm:inline">Admin</span>
+                                    </button>
+                                </div>
+                                
+                                <!-- Baris Bawah: Waktu dan Tanggal (Hanya Desktop/Tablet) -->
+                                <div class="text-right hidden sm:block mt-1 transition-all duration-300" id="header-datetime">
+                                    <div class="text-lg font-bold font-mono leading-none tracking-wider transition-all duration-300" id="realtime-clock">00:00:00</div>
+                                    <div class="text-[10px] text-blue-200 mt-0.5 uppercase tracking-wide transition-all duration-300" id="realtime-date">Tanggal</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </header>
+                </header>
 
-            <!-- Running Text -->
-            <div class="bg-blue-900 text-white shadow-inner border-b border-blue-800">
-                <div class="container mx-auto px-4 flex items-center">
-                    <div class="bg-yellow-500 text-blue-900 font-bold text-[10px] md:text-xs px-2 md:px-3 py-1.5 uppercase tracking-widest shrink-0 shadow-md relative z-10 flex items-center">
-                        <i class="fa-solid fa-bullhorn mr-1 md:mr-2"></i> INFO
-                    </div>
-                    <!-- Menggunakan container dan animasi CSS modern -->
-                    <div class="marquee-container flex-grow px-2 md:px-4 py-1.5 text-xs md:text-sm font-medium tracking-wide">
-                        <div id="public-running-text" class="marquee-content">Selamat Datang di Sistem Informasi Quick Count dan Real Count Pilkada 2026. Pantau terus pergerakan perolehan suara terkini dari seluruh TPS.</div>
+                <!-- Running Text -->
+                <div class="bg-blue-900 text-white shadow-inner border-b border-blue-800 transition-all duration-300" id="running-text-wrapper">
+                    <div class="container mx-auto px-4 flex items-center">
+                        <div id="running-info-badge" class="bg-yellow-500 text-blue-900 font-bold text-[10px] md:text-xs px-2 md:px-3 py-1.5 uppercase tracking-widest shrink-0 shadow-md relative z-10 flex items-center transition-all duration-300">
+                            <i class="fa-solid fa-bullhorn mr-1 md:mr-2"></i> INFO
+                        </div>
+                        <!-- Menggunakan container dan animasi CSS modern -->
+                        <div id="running-text-wrap" class="marquee-container flex-grow px-2 md:px-4 py-1.5 text-xs md:text-sm font-medium tracking-wide transition-all duration-300">
+                            <div id="public-running-text" class="marquee-content">Selamat Datang di Sistem Informasi Quick Count dan Real Count Pilkada 2026. Pantau terus pergerakan perolehan suara terkini dari seluruh TPS.</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Main Dashboard Content -->
+            <!-- pt-[80px] md:pt-[120px] ditambahkan untuk mengimbangi header yang sekarang fixed di atas -->
             <!-- pb-24 ditambahkan agar konten tidak tertutup oleh bottom navigation bar di layar HP -->
-            <main class="container mx-auto px-4 py-6 pb-24 md:pb-6 flex-grow space-y-6">
+            <main class="container mx-auto px-4 pb-24 md:pb-6 pt-[80px] md:pt-[120px] flex-grow space-y-6">
                 
                 <!-- DAPIL TABS NAVIGATION (Sticky Bottom on Mobile, Regular on Desktop) -->
                 <div class="fixed bottom-0 left-0 right-0 z-40 md:relative md:bottom-auto glass-panel bg-white/95 dark:bg-darkcard/95 border-t border-gray-200 dark:border-gray-800 md:border-t-0 md:border-b-4 md:border-b-blue-600 md:rounded-xl shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] md:shadow-sm p-1.5 md:p-2 overflow-x-auto custom-scrollbar safe-area-pb md:pb-2">
@@ -979,6 +1011,19 @@
 
             // Setup Admin Navigation Logic
             setupAdminNavs();
+
+            // Setup Scroll Listener for Shrinking Header
+            window.addEventListener('scroll', () => {
+                const topBar = document.getElementById('public-top-bar');
+                if (!topBar) return;
+                
+                // Jika halaman digulir lebih dari 40px ke bawah, tambahkan kelas is-shrunk
+                if (window.scrollY > 40) {
+                    topBar.classList.add('is-shrunk');
+                } else {
+                    topBar.classList.remove('is-shrunk');
+                }
+            });
         });
 
         // --- ADMIN NAVIGATION LOGIC ---
