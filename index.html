@@ -300,389 +300,6 @@
 
             <!-- Admin Main Content -->
             <main class="flex-grow flex flex-col h-full overflow-hidden bg-gray-100 dark:bg-darkbg w-full md:w-auto relative">
-                <!-- Admin Header              </div>
-            </div>
-
-            <!-- Main Dashboard Content -->
-            <!-- pb-24 ditambahkan agar konten tidak tertutup oleh bottom navigation bar di layar HP -->
-            <main class="container mx-auto px-4 py-6 pb-24 md:pb-6 flex-grow space-y-6">
-                
-                <!-- DAPIL TABS NAVIGATION (Sticky Bottom on Mobile, Regular on Desktop) -->
-                <div class="fixed bottom-0 left-0 right-0 z-40 md:relative md:bottom-auto glass-panel bg-white/95 dark:bg-darkcard/95 border-t border-gray-200 dark:border-gray-800 md:border-t-0 md:border-b-4 md:border-b-blue-600 md:rounded-xl shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] md:shadow-sm p-1.5 md:p-2 overflow-x-auto custom-scrollbar safe-area-pb md:pb-2">
-                    <div id="dapil-tabs-nav" class="flex gap-1 md:gap-2 min-w-max mx-auto px-2 md:px-0">
-                        <!-- Tab buttons will be injected here via JS -->
-                    </div>
-                </div>
-
-                <!-- Top Progress & Stats Row (Dinamis Sesuai Dapil) -->
-                <div id="public-stats-container" class="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 transition-all duration-300">
-                    <!-- Progress Card -->
-                    <div class="col-span-2 lg:col-span-2 glass-panel rounded-xl p-4 md:p-5 shadow-sm">
-                        <div class="flex justify-between items-end mb-2">
-                            <h3 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase">Data Masuk Dapil</h3>
-                            <span class="text-2xl md:text-3xl font-black text-primary dark:text-blue-400" id="data-masuk-pct">0%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 md:h-4 mb-2 overflow-hidden">
-                            <div class="bg-gradient-to-r from-blue-600 to-cyan-400 h-3 md:h-4 rounded-full progress-bar-animated" id="data-masuk-bar" style="width: 0%"></div>
-                        </div>
-                        <div class="flex justify-between text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-semibold">
-                            <span>TPS Masuk: <span id="tps-masuk-val" class="text-gray-800 dark:text-gray-200">0</span></span>
-                            <span>Total TPS Dapil: <span id="tps-total-val" class="text-gray-800 dark:text-gray-200">0</span></span>
-                        </div>
-                    </div>
-
-                    <!-- Margin of Error -->
-                    <div class="glass-panel rounded-xl p-3 md:p-4 shadow-sm border-l-4 border-l-blue-500 flex flex-col justify-center">
-                        <h4 class="text-[10px] md:text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Margin of Error</h4>
-                        <div class="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-100" id="stat-moe">0%</div>
-                        <p class="text-[9px] md:text-[10px] text-gray-400 mt-1">Batas Toleransi</p>
-                    </div>
-
-                    <!-- Confidence Level -->
-                    <div class="glass-panel rounded-xl p-3 md:p-4 shadow-sm border-l-4 border-l-purple-500 flex flex-col justify-center">
-                        <h4 class="text-[10px] md:text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Confidence Lvl</h4>
-                        <div class="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-100" id="stat-conf">0%</div>
-                        <p class="text-[9px] md:text-[10px] text-gray-400 mt-1">Tingkat Kepercayaan</p>
-                    </div>
-
-                    <!-- Voter Turn Out -->
-                    <div class="col-span-2 lg:col-span-1 glass-panel rounded-xl p-3 md:p-4 shadow-sm border-l-4 border-l-green-500 flex flex-col justify-center">
-                        <h4 class="text-[10px] md:text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Voter Turn Out</h4>
-                        <div class="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-100" id="stat-vto">0%</div>
-                        <p class="text-[9px] md:text-[10px] text-gray-400 mt-1">Partisipasi Pemilih (TPS)</p>
-                    </div>
-                </div>
-
-                <!-- DAPIL RESULTS CONTAINER -->
-                <div id="dapil-results-container" class="relative min-h-[400px]">
-                    <!-- Dynamic Dapil Tab Contents injected here via JS -->
-                </div>
-
-            </main>
-
-            <!-- Footer -->
-            <!-- Disembunyikan di HP karena ruang sempit dan ada bottom nav, tampil di Desktop -->
-            <footer class="hidden md:block bg-white dark:bg-darkcard border-t border-gray-200 dark:border-gray-800 py-6 mt-auto">
-                <div class="container mx-auto px-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                    <p class="font-semibold text-gray-800 dark:text-gray-200" id="footer-inst">Lembaga Survei Independen Indonesia</p>
-                    <p class="mt-1">Hak Cipta &copy; <span id="current-year"></span>. Sistem Quick Count & Real Count Profesional.</p>
-                </div>
-            </footer>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- ADMIN PANEL VIEW (Hidden by default)       -->
-        <!-- ========================================== -->
-        <!-- Menggunakan h-[100dvh] agar sidebar admin tidak terpotong address bar mobile -->
-        <div id="admin-view" class="hidden flex-grow flex h-[100dvh] overflow-hidden bg-gray-50 dark:bg-darkbg relative w-full">
-            
-            <!-- Admin Sidebar (Desktop Only) -->
-            <aside class="hidden md:flex flex-col w-64 bg-primary text-white h-full shrink-0 shadow-xl z-50" id="admin-sidebar">
-                <div class="p-4 border-b border-blue-800 flex justify-between items-center">
-                    <h2 class="text-xl font-bold"><i class="fa-solid fa-user-shield mr-2"></i> QC Admin</h2>
-                    <div class="flex gap-2">
-                        <button onclick="closeAdmin()" class="text-blue-300 hover:text-white" title="Ke Tampilan Publik">
-                            <i class="fa-solid fa-desktop"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <nav class="flex-grow p-4 space-y-1 overflow-y-auto custom-scrollbar">
-                    <button class="admin-nav-btn active w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition bg-blue-800 border-l-4 border-white" data-target="admin-dashboard">
-                        <i class="fa-solid fa-gauge-high w-6"></i> Dashboard
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition text-green-400 font-semibold" data-target="admin-input">
-                        <i class="fa-solid fa-keyboard w-6"></i> Input Suara
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition text-yellow-400 font-semibold" data-target="admin-tabel-suara">
-                        <i class="fa-solid fa-table-list w-6"></i> Tabel Suara
-                    </button>
-                    
-                    <div class="text-xs font-bold text-blue-300 uppercase tracking-wider mt-4 mb-2 px-3">Master Data</div>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-dapil">
-                        <i class="fa-solid fa-map-location-dot w-6"></i> Data Dapil
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-partai">
-                        <i class="fa-solid fa-flag w-6"></i> Data Partai
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-caleg">
-                        <i class="fa-solid fa-users-gear w-6"></i> Data Caleg
-                    </button>
-                    
-                    <div class="text-xs font-bold text-blue-300 uppercase tracking-wider mt-4 mb-2 px-3">Sistem</div>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-settings">
-                        <i class="fa-solid fa-gear w-6"></i> Pengaturan Aplikasi
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-backup">
-                        <i class="fa-solid fa-database w-6"></i> Backup & Restore
-                    </button>
-                </nav>
-                
-                <div class="p-4 border-t border-blue-800">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center font-bold">A</div>
-                            <div>
-                                <p class="text-sm font-bold">Administrator</p>
-                                <p class="text-[10px] text-green-300"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Online</p>
-                            </div>
-                        </div>
-                        <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300" title="Logout">
-                            <i class="fa-solid fa-power-off"></i>
-                        </button>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Admin Main Content -->
-            <main class="flex-grow flex flex-col h-full overflow-hidden bg-gray-100 dark:bg-darkbg w-full md:w-auto relative">
-                <!-- Admin Headerm navigation bar di layar HP -->
-            <main class="container mx-auto px-4 py-6 pb-24 md:pb-6 flex-grow space-y-6">
-                
-                <!-- DAPIL TABS NAVIGATION (Sticky Bottom on Mobile, Regular on Desktop) -->
-                <div class="fixed bottom-0 left-0 right-0 z-40 md:relative md:bottom-auto glass-panel bg-white/95 dark:bg-darkcard/95 border-t border-gray-200 dark:border-gray-800 md:border-t-0 md:border-b-4 md:border-b-blue-600 md:rounded-xl shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] md:shadow-sm p-1.5 md:p-2 overflow-x-auto custom-scrollbar safe-area-pb md:pb-2">
-                    <div id="dapil-tabs-nav" class="flex gap-1 md:gap-2 min-w-max mx-auto px-2 md:px-0">
-                        <!-- Tab buttons will be injected here via JS -->
-                    </div>
-                </div>
-
-                <!-- Top Progress & Stats Row (Dinamis Sesuai Dapil) -->
-                <div id="public-stats-container" class="grid grid-cols-1 lg:grid-cols-4 gap-4 transition-all duration-300">
-                    <!-- Progress Card -->
-                    <div class="lg:col-span-2 glass-panel rounded-xl p-5 shadow-sm">
-                        <div class="flex justify-between items-end mb-2">
-                            <h3 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase">Data Masuk Dapil</h3>
-                            <span class="text-3xl font-black text-primary dark:text-blue-400" id="data-masuk-pct">0%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 mb-2 overflow-hidden">
-                            <div class="bg-gradient-to-r from-blue-600 to-cyan-400 h-4 rounded-full progress-bar-animated" id="data-masuk-bar" style="width: 0%"></div>
-                        </div>
-                        <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 font-semibold">
-                            <span>TPS Masuk: <span id="tps-masuk-val" class="text-gray-800 dark:text-gray-200">0</span></span>
-                            <span>Total TPS Dapil: <span id="tps-total-val" class="text-gray-800 dark:text-gray-200">0</span></span>
-                        </div>
-                    </div>
-
-                    <!-- Small Stats -->
-                    <div class="glass-panel rounded-xl p-4 shadow-sm border-l-4 border-l-blue-500 flex flex-col justify-center">
-                        <h4 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Margin of Error</h4>
-                        <div class="text-2xl font-bold text-gray-800 dark:text-gray-100" id="stat-moe">0%</div>
-                        <p class="text-[10px] text-gray-400 mt-1">Confidence Lvl: <span id="stat-conf">0%</span></p>
-                    </div>
-                    <div class="glass-panel rounded-xl p-4 shadow-sm border-l-4 border-l-green-500 flex flex-col justify-center">
-                        <h4 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Voter Turn Out</h4>
-                        <div class="text-2xl font-bold text-gray-800 dark:text-gray-100" id="stat-vto">0%</div>
-                        <p class="text-[10px] text-gray-400 mt-1">Partisipasi Pemilih (TPS Masuk)</p>
-                    </div>
-                </div>
-
-                <!-- DAPIL RESULTS CONTAINER -->
-                <div id="dapil-results-container" class="relative min-h-[400px]">
-                    <!-- Dynamic Dapil Tab Contents injected here via JS -->
-                </div>
-
-            </main>
-
-            <!-- Footer -->
-            <!-- Disembunyikan di HP karena ruang sempit dan ada bottom nav, tampil di Desktop -->
-            <footer class="hidden md:block bg-white dark:bg-darkcard border-t border-gray-200 dark:border-gray-800 py-6 mt-auto">
-                <div class="container mx-auto px-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                    <p class="font-semibold text-gray-800 dark:text-gray-200" id="footer-inst">Lembaga Survei Independen Indonesia</p>
-                    <p class="mt-1">Hak Cipta &copy; <span id="current-year"></span>. Sistem Quick Count & Real Count Profesional.</p>
-                </div>
-            </footer>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- ADMIN PANEL VIEW (Hidden by default)       -->
-        <!-- ========================================== -->
-        <div id="admin-view" class="hidden flex-grow flex h-screen overflow-hidden bg-gray-50 dark:bg-darkbg relative">
-            
-            <!-- Admin Sidebar (Desktop Only) -->
-            <aside class="hidden md:flex flex-col w-64 bg-primary text-white h-full shrink-0 shadow-xl z-50" id="admin-sidebar">
-                <div class="p-4 border-b border-blue-800 flex justify-between items-center">
-                    <h2 class="text-xl font-bold"><i class="fa-solid fa-user-shield mr-2"></i> QC Admin</h2>
-                    <div class="flex gap-2">
-                        <button onclick="closeAdmin()" class="text-blue-300 hover:text-white" title="Ke Tampilan Publik">
-                            <i class="fa-solid fa-desktop"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <nav class="flex-grow p-4 space-y-1 overflow-y-auto custom-scrollbar">
-                    <button class="admin-nav-btn active w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition bg-blue-800 border-l-4 border-white" data-target="admin-dashboard">
-                        <i class="fa-solid fa-gauge-high w-6"></i> Dashboard
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition text-green-400 font-semibold" data-target="admin-input">
-                        <i class="fa-solid fa-keyboard w-6"></i> Input Suara
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition text-yellow-400 font-semibold" data-target="admin-tabel-suara">
-                        <i class="fa-solid fa-table-list w-6"></i> Tabel Suara
-                    </button>
-                    
-                    <div class="text-xs font-bold text-blue-300 uppercase tracking-wider mt-4 mb-2 px-3">Master Data</div>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-dapil">
-                        <i class="fa-solid fa-map-location-dot w-6"></i> Data Dapil
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-partai">
-                        <i class="fa-solid fa-flag w-6"></i> Data Partai
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-caleg">
-                        <i class="fa-solid fa-users-gear w-6"></i> Data Caleg
-                    </button>
-                    
-                    <div class="text-xs font-bold text-blue-300 uppercase tracking-wider mt-4 mb-2 px-3">Sistem</div>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-settings">
-                        <i class="fa-solid fa-gear w-6"></i> Pengaturan Aplikasi
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-backup">
-                        <i class="fa-solid fa-database w-6"></i> Backup & Restore
-                    </button>
-                </nav>
-                
-                <div class="p-4 border-t border-blue-800">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center font-bold">A</div>
-                            <div>
-                                <p class="text-sm font-bold">Administrator</p>
-                                <p class="text-[10px] text-green-300"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Online</p>
-                            </div>
-                        </div>
-                        <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300" title="Logout">
-                            <i class="fa-solid fa-power-off"></i>
-                        </button>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Admin Main Content -->
-            <main class="flex-grow flex flex-col h-full overflow-hidden bg-gray-100 dark:bg-darkbg w-full md:w-auto relative">
-                <!-- Admin Header -->
-                <header class="bg-white dark:bg-darkcard shadow-sm px-4 md:px-6 py-4 flex justify-between items-center z-10 shrink-0 border-b border-gray-200 dark:border-gray-800">
-                    <div class="flex items-center">
-                        <h2 class="text-lg md:text-xl font-bold text-gray-800 dark:text-white" id="admin-page-title">Dashboard</h2>
-                    </div>
-                    <div class="flex gap-1 md:gap-3 items-center">
-                        <span id="db-badge-admin" class="bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800/50 text-[10px] md:text-xs font-bold px-2 py-1.5 md:px-3 md:py-1.5 rounded-full flex items-center gap-1.5 md:gap-2 border shadow-sm transition-colors duration-300 mr-2 md:mr-0">
-                            <span class="relative flex h-2 w-2 md:h-2.5 md:w-2.5">
-                                <span id="db-ping-admin" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opa-nav" class="flex gap-1 md:gap-2 min-w-max mx-auto px-2 md:px-0">
-                        <!-- Tab buttons will be injected here via JS -->
-                    </div>
-                </div>
-
-                <!-- Top Progress & Stats Row (Dinamis Sesuai Dapil) -->
-                <div id="public-stats-container" class="grid grid-cols-1 lg:grid-cols-4 gap-4 transition-all duration-300">
-                    <!-- Progress Card -->
-                    <div class="lg:col-span-2 glass-panel rounded-xl p-5 shadow-sm">
-                        <div class="flex justify-between items-end mb-2">
-                            <h3 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase">Data Masuk Dapil</h3>
-                            <span class="text-3xl font-black text-primary dark:text-blue-400" id="data-masuk-pct">0%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 mb-2 overflow-hidden">
-                            <div class="bg-gradient-to-r from-blue-600 to-cyan-400 h-4 rounded-full progress-bar-animated" id="data-masuk-bar" style="width: 0%"></div>
-                        </div>
-                        <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 font-semibold">
-                            <span>TPS Masuk: <span id="tps-masuk-val" class="text-gray-800 dark:text-gray-200">0</span></span>
-                            <span>Total TPS Dapil: <span id="tps-total-val" class="text-gray-800 dark:text-gray-200">0</span></span>
-                        </div>
-                    </div>
-
-                    <!-- Small Stats -->
-                    <div class="glass-panel rounded-xl p-4 shadow-sm border-l-4 border-l-blue-500 flex flex-col justify-center">
-                        <h4 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Margin of Error</h4>
-                        <div class="text-2xl font-bold text-gray-800 dark:text-gray-100" id="stat-moe">0%</div>
-                        <p class="text-[10px] text-gray-400 mt-1">Confidence Lvl: <span id="stat-conf">0%</span></p>
-                    </div>
-                    <div class="glass-panel rounded-xl p-4 shadow-sm border-l-4 border-l-green-500 flex flex-col justify-center">
-                        <h4 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Voter Turn Out</h4>
-                        <div class="text-2xl font-bold text-gray-800 dark:text-gray-100" id="stat-vto">0%</div>
-                        <p class="text-[10px] text-gray-400 mt-1">Partisipasi Pemilih (TPS Masuk)</p>
-                    </div>
-                </div>
-
-                <!-- DAPIL RESULTS CONTAINER -->
-                <div id="dapil-results-container" class="relative min-h-[400px]">
-                    <!-- Dynamic Dapil Tab Contents injected here via JS -->
-                </div>
-
-            </main>
-
-            <!-- Footer -->
-            <!-- Disembunyikan di HP karena ruang sempit dan ada bottom nav, tampil di Desktop -->
-            <footer class="hidden md:block bg-white dark:bg-darkcard border-t border-gray-200 dark:border-gray-800 py-6 mt-auto">
-                <div class="container mx-auto px-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                    <p class="font-semibold text-gray-800 dark:text-gray-200" id="footer-inst">Lembaga Survei Independen Indonesia</p>
-                    <p class="mt-1">Hak Cipta &copy; <span id="current-year"></span>. Sistem Quick Count & Real Count Profesional.</p>
-                </div>
-            </footer>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- ADMIN PANEL VIEW (Hidden by default)       -->
-        <!-- ========================================== -->
-        <div id="admin-view" class="hidden flex-grow flex h-screen overflow-hidden bg-gray-50 dark:bg-darkbg relative">
-            
-            <!-- Admin Sidebar (Desktop Only) -->
-            <aside class="hidden md:flex flex-col w-64 bg-primary text-white h-full shrink-0 shadow-xl z-50" id="admin-sidebar">
-                <div class="p-4 border-b border-blue-800 flex justify-between items-center">
-                    <h2 class="text-xl font-bold"><i class="fa-solid fa-user-shield mr-2"></i> QC Admin</h2>
-                    <div class="flex gap-2">
-                        <button onclick="closeAdmin()" class="text-blue-300 hover:text-white" title="Ke Tampilan Publik">
-                            <i class="fa-solid fa-desktop"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <nav class="flex-grow p-4 space-y-1 overflow-y-auto custom-scrollbar">
-                    <button class="admin-nav-btn active w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition bg-blue-800 border-l-4 border-white" data-target="admin-dashboard">
-                        <i class="fa-solid fa-gauge-high w-6"></i> Dashboard
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition text-green-400 font-semibold" data-target="admin-input">
-                        <i class="fa-solid fa-keyboard w-6"></i> Input Suara
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition text-yellow-400 font-semibold" data-target="admin-tabel-suara">
-                        <i class="fa-solid fa-table-list w-6"></i> Tabel Suara
-                    </button>
-                    
-                    <div class="text-xs font-bold text-blue-300 uppercase tracking-wider mt-4 mb-2 px-3">Master Data</div>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-dapil">
-                        <i class="fa-solid fa-map-location-dot w-6"></i> Data Dapil
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-partai">
-                        <i class="fa-solid fa-flag w-6"></i> Data Partai
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-caleg">
-                        <i class="fa-solid fa-users-gear w-6"></i> Data Caleg
-                    </button>
-                    
-                    <div class="text-xs font-bold text-blue-300 uppercase tracking-wider mt-4 mb-2 px-3">Sistem</div>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-settings">
-                        <i class="fa-solid fa-gear w-6"></i> Pengaturan Aplikasi
-                    </button>
-                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-backup">
-                        <i class="fa-solid fa-database w-6"></i> Backup & Restore
-                    </button>
-                </nav>
-                
-                <div class="p-4 border-t border-blue-800">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center font-bold">A</div>
-                            <div>
-                                <p class="text-sm font-bold">Administrator</p>
-                                <p class="text-[10px] text-green-300"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Online</p>
-                            </div>
-                        </div>
-                        <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300" title="Logout">
-                            <i class="fa-solid fa-power-off"></i>
-                        </button>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Admin Main Content -->
-            <main class="flex-grow flex flex-col h-full overflow-hidden bg-gray-100 dark:bg-darkbg w-full md:w-auto relative">
                 <!-- Admin Header -->
                 <header class="bg-white dark:bg-darkcard shadow-sm px-4 md:px-6 py-4 flex justify-between items-center z-10 shrink-0 border-b border-gray-200 dark:border-gray-800">
                     <div class="flex items-center">
@@ -1352,6 +969,7 @@
             allBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const target = this.getAttribute('data-target');
+                    if(!target) return;
                     
                     // Reset Desktop styles
                     desktopBtns.forEach(b => b.classList.remove('bg-blue-800', 'border-l-4', 'border-white'));
@@ -1416,6 +1034,7 @@
         function toggleAdminDropup(id, event) {
             event.stopPropagation();
             const el = document.getElementById('dropup-' + id);
+            if (!el) return;
             const isHidden = el.classList.contains('hidden');
             closeAdminDropups(); // close other drawers
             if (isHidden) {
@@ -1443,7 +1062,7 @@
                 if(el) el.className = `animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${status === 'syncing' ? 'bg-yellow-400' : (status === 'error' ? 'bg-red-400' : 'bg-green-400')}`; 
             });
             dots.forEach(el => { 
-                if(el) el.className = `relative inline-flex rounded-full h-2 w-2 md:h-2.5 md:w-2.5 ${status === 'syncing' ? 'bg-yellow-500' : (status === 'error' ? 'bg-red-500' : 'bg-green-500')}`; 
+                if(el) el.className = `relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2.5 sm:w-2.5 ${status === 'syncing' ? 'bg-yellow-500' : (status === 'error' ? 'bg-red-500' : 'bg-green-500')}`; 
             });
             
             if(textAdmin) {
@@ -1453,7 +1072,7 @@
                 mobileTextAdmin.textContent = status === 'syncing' ? 'Sync' : (status === 'error' ? 'Offline' : 'Online');
             }
             if(badgeAdmin) {
-                badgeAdmin.className = `text-[10px] md:text-xs font-bold px-2 py-1.5 md:px-3 md:py-1.5 rounded-full flex items-center gap-1.5 md:gap-2 border shadow-sm transition-colors duration-300 ${status === 'syncing' ? 'bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800' : (status === 'error' ? 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800' : 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800')}`;
+                badgeAdmin.className = `text-[9px] sm:text-[10px] md:text-xs font-bold px-1.5 py-1 sm:px-2 sm:py-1.5 md:px-3 md:py-1.5 rounded-full flex items-center gap-1 sm:gap-1.5 md:gap-2 border shadow-sm transition-colors duration-300 ${status === 'syncing' ? 'bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800' : (status === 'error' ? 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800' : 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800')}`;
             }
         }
 
@@ -1461,10 +1080,12 @@
             await fetchDataFromDB(false);
             
             setTimeout(() => {
-                document.getElementById('loading-screen').style.opacity = '0';
+                const loadingScreen = document.getElementById('loading-screen');
+                if(loadingScreen) loadingScreen.style.opacity = '0';
                 setTimeout(() => {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    document.getElementById('app-container').classList.remove('hidden');
+                    if(loadingScreen) loadingScreen.style.display = 'none';
+                    const appContainer = document.getElementById('app-container');
+                    if(appContainer) appContainer.classList.remove('hidden');
                     renderPublicDashboard();
                     startAutoRefresh(); 
                 }, 500);
@@ -1690,7 +1311,8 @@
             if(showAlert) {
                 Swal.fire({ icon: 'success', title: 'Data Di-reset', text: 'Data dummy (Tabel Suara) berhasil dimuat.', timer: 2000, showConfirmButton: false});
                 renderPublicDashboard();
-                if(!document.getElementById('admin-view').classList.contains('hidden')) initAdminData();
+                const adminView = document.getElementById('admin-view');
+                if(adminView && !adminView.classList.contains('hidden')) initAdminData();
             }
         }
 
@@ -1709,7 +1331,8 @@
                     
                     renderPublicDashboard();
                     updateAdminDashboard();
-                    if(!document.getElementById('admin-tabel-suara').classList.contains('hidden')) renderAdminTabelSuara();
+                    const adminTabelSuara = document.getElementById('admin-tabel-suara');
+                    if(adminTabelSuara && !adminTabelSuara.classList.contains('hidden')) renderAdminTabelSuara();
                 }
             })
         }
@@ -1764,7 +1387,14 @@
             document.getElementById('app-title').textContent = appData.config.title;
             document.getElementById('app-subtitle').textContent = appData.config.subtitle;
             document.getElementById('footer-inst').textContent = appData.config.institute;
-            document.getElementById('public-running-text').textContent = appData.config.running_text || "Selamat Datang di Sistem Informasi Quick Count dan Real Count.";
+            
+            // Perbaikan: Hanya perbarui Teks Berjalan (Marquee) jika ada perubahan di pengaturan Admin
+            // Hal ini mencegah marquee mereset ke awal setiap kali auto-refresh (10 detik) terjadi.
+            const runningTextEl = document.getElementById('public-running-text');
+            const newRunningText = appData.config.running_text || "Selamat Datang di Sistem Informasi Quick Count dan Real Count.";
+            if (runningTextEl.textContent !== newRunningText) {
+                runningTextEl.textContent = newRunningText;
+            }
 
             // Panggil Render Per Dapil Tab Content
             renderDapilTabsAndContent();
@@ -2181,9 +1811,11 @@
                 try {
                     await fetchDataFromDB(true);
                     renderPublicDashboard();
-                    if(!document.getElementById('admin-view').classList.contains('hidden')) {
+                    const adminView = document.getElementById('admin-view');
+                    if(adminView && !adminView.classList.contains('hidden')) {
                         updateAdminDashboard();
-                        if(!document.getElementById('admin-tabel-suara').classList.contains('hidden')) renderAdminTabelSuara();
+                        const adminTabelSuara = document.getElementById('admin-tabel-suara');
+                        if(adminTabelSuara && !adminTabelSuara.classList.contains('hidden')) renderAdminTabelSuara();
                     }
                 } catch(e) { console.warn("Auto refresh gagal terhubung", e); }
             }, 10000); 
@@ -2199,22 +1831,29 @@
             document.getElementById('login-box').classList.replace('scale-100','scale-95');
             setTimeout(() => document.getElementById('login-modal').classList.add('hidden'), 300);
         }
+        
         function handleLogin(e) {
             e.preventDefault();
             if(document.getElementById('username').value === 'admin' && document.getElementById('password').value === 'admin123') {
                 closeLoginModal();
                 Swal.fire({icon: 'success', title: 'Login Berhasil', showConfirmButton: false, timer: 1000}).then(() => {
-                    document.getElementById('public-view').classList.add('hidden');
-                    document.getElementById('admin-view').classList.remove('hidden');
+                    const publicView = document.getElementById('app-container');
+                    if(publicView) publicView.classList.add('hidden');
+                    const adminView = document.getElementById('admin-view');
+                    if(adminView) adminView.classList.remove('hidden');
                     initAdminData();
                 });
             } else Swal.fire({icon: 'error', title: 'Akses Ditolak', text: 'Username/password salah!'});
         }
+        
         function closeAdmin() {
-            document.getElementById('admin-view').classList.add('hidden');
-            document.getElementById('public-view').classList.remove('hidden');
+            const adminView = document.getElementById('admin-view');
+            if(adminView) adminView.classList.add('hidden');
+            const publicView = document.getElementById('app-container');
+            if(publicView) publicView.classList.remove('hidden');
             renderPublicDashboard(); 
         }
+        
         function logoutAdmin() {
             Swal.fire({
                 title: 'Konfirmasi', text: 'Anda yakin ingin keluar dari panel admin?', icon: 'question',
@@ -3233,7 +2872,8 @@
             
             Swal.fire({icon: 'success', title: 'Data TPS Tersimpan', text: 'Perolehan suara berhasil ditambahkan ke dalam sistem rekapitulasi.', timer: 2000, showConfirmButton: false});
             resetFormEntry();
-            renderAdminTabelSuara(); // refresh tabel jika ter-load
+            const adminTabelSuara = document.getElementById('admin-tabel-suara');
+            if(adminTabelSuara && !adminTabelSuara.classList.contains('hidden')) renderAdminTabelSuara();
         }
 
         function reverseVotes(payload) {
@@ -3284,7 +2924,8 @@
             
             if(!appData.suara_tps) appData.suara_tps = [];
             
-            document.getElementById('cb-check-all-suara').checked = false;
+            const checkAll = document.getElementById('cb-check-all-suara');
+            if(checkAll) checkAll.checked = false;
             toggleBulkDeleteBtnSuara();
 
             let filtered = appData.suara_tps.filter(s => {
@@ -3617,27 +3258,26 @@
             const file = e.target.files[0];
             if(!file) return;
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = function(event) {
                 try {
-                    const data = new Uint8Array(e.target.result);
+                    const data = new Uint8Array(event.target.result);
                     const workbook = XLSX.read(data, {type: 'array'});
-                    const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const json = XLSX.utils.sheet_to_json(worksheet);
                     
                     let importedCount = 0;
                     json.forEach(row => {
-                        if(row.KODE_QC || row.NAMA_DAPIL) {
-                            let existing = appData.titik_sampel.find(t => t.kode_qc === String(row.KODE_QC));
-                            if(existing && row.KODE_QC) {
-                                existing.dapil = row.NAMA_DAPIL || existing.dapil; existing.kab = row.KAB_KOTA || existing.kab;
-                                existing.kec = row.KECAMATAN || existing.kec; existing.desa = row.DESA_KELURAHAN || existing.desa;
-                                existing.tps = row.NOMOR_TPS || existing.tps;
-                            } else {
-                                appData.titik_sampel.push({
-                                    id: 'TS' + new Date().getTime() + Math.floor(Math.random() * 1000),
-                                    kode_qc: String(row.KODE_QC || ''), dapil: String(row.NAMA_DAPIL || ''), kab: String(row.KAB_KOTA || ''),
-                                    kec: String(row.KECAMATAN || ''), desa: String(row.DESA_KELURAHAN || ''), tps: String(row.NOMOR_TPS || '')
-                                });
-                            }
+                        if(row.NAMA_DAPIL && row.NOMOR_TPS) {
+                            appData.titik_sampel.push({
+                                id: 'TS' + new Date().getTime() + Math.floor(Math.random()*1000),
+                                kode_qc: row.KODE_QC || '',
+                                dapil: row.NAMA_DAPIL || '',
+                                kab: row.KAB_KOTA || '',
+                                kec: row.KECAMATAN || '',
+                                desa: row.DESA_KELURAHAN || '',
+                                tps: row.NOMOR_TPS || ''
+                            });
                             importedCount++;
                         }
                     });
@@ -3648,12 +3288,12 @@
                 }
             };
             reader.readAsArrayBuffer(file);
-            e.target.value = ''; // reset
+            e.target.value = '';
         }
 
         // --- PARTAI EXCEL ---
         function downloadTemplatePartai() {
-            const data = [{ NOMOR_URUT: 1, NAMA_PARTAI: "Partai Sejahtera", WARNA_HEX: "#1d4ed8", URL_LOGO: "" }];
+            const data = [{ NOMOR_URUT: 1, NAMA_PARTAI: "Partai Contoh", URL_LOGO: "", WARNA_HEX: "#3b82f6" }];
             const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Template_Partai");
@@ -3663,7 +3303,7 @@
         function exportExcelPartai() {
             if(appData.parties.length === 0) return Swal.fire('Kosong', 'Tidak ada data untuk diexport', 'info');
             const data = appData.parties.map(p => ({
-                NOMOR_URUT: p.number, NAMA_PARTAI: p.name, WARNA_HEX: p.color, URL_LOGO: p.logo_url || ''
+                NOMOR_URUT: p.number || '', NAMA_PARTAI: p.name || '', URL_LOGO: p.logo_url || '', WARNA_HEX: p.color || ''
             }));
             const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
@@ -3675,33 +3315,33 @@
             const file = e.target.files[0];
             if(!file) return;
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = function(event) {
                 try {
-                    const workbook = XLSX.read(new Uint8Array(e.target.result), {type: 'array'});
-                    const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+                    const data = new Uint8Array(event.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const json = XLSX.utils.sheet_to_json(worksheet);
                     
                     let importedCount = 0;
                     json.forEach(row => {
-                        if(row.NOMOR_URUT && row.NAMA_PARTAI) {
-                            let num = parseInt(row.NOMOR_URUT);
-                            let existing = appData.parties.find(p => p.number === num);
-                            if(existing) {
-                                existing.name = row.NAMA_PARTAI; 
-                                existing.color = row.WARNA_HEX || existing.color; 
-                                existing.logo_url = row.URL_LOGO || existing.logo_url;
-                            } else {
-                                appData.parties.push({
-                                    id: 'P' + new Date().getTime() + Math.floor(Math.random() * 1000),
-                                    number: num, name: row.NAMA_PARTAI, color: row.WARNA_HEX || '#94a3b8', logo_url: row.URL_LOGO || '', suara_partai: 0
-                                });
-                            }
+                        if(row.NAMA_PARTAI && row.NOMOR_URUT) {
+                            appData.parties.push({
+                                id: 'P' + new Date().getTime() + Math.floor(Math.random()*1000),
+                                number: parseInt(row.NOMOR_URUT) || 0,
+                                name: row.NAMA_PARTAI || '',
+                                logo_url: row.URL_LOGO || '',
+                                color: row.WARNA_HEX || '#3b82f6',
+                                suara_partai: 0
+                            });
                             importedCount++;
                         }
                     });
                     
-                    // Update setting counter automatically
                     appData.config.jumlah_partai = Math.max(appData.config.jumlah_partai || 0, appData.parties.length);
-                    document.getElementById('setting-jumlah-partai').value = appData.config.jumlah_partai;
+                    if(document.getElementById('setting-jumlah-partai')) {
+                        document.getElementById('setting-jumlah-partai').value = appData.config.jumlah_partai;
+                    }
 
                     saveDataToDB(false); renderAdminPartai(); initAdminData();
                     Swal.fire('Berhasil', `${importedCount} baris data Partai diimpor.`, 'success');
@@ -3715,7 +3355,7 @@
 
         // --- CALEG EXCEL ---
         function downloadTemplateCaleg() {
-            const data = [{ NAMA_DAPIL: "Dapil 1", NAMA_PARTAI: "Partai Sejahtera", NOMOR_URUT_CALEG: 1, NAMA_CALEG: "Budi Santoso", GENDER_L_P: "L" }];
+            const data = [{ NAMA_DAPIL: "Dapil 1", NAMA_PARTAI: "Partai Contoh", NOMOR_URUT: 1, NAMA_CALEG: "Nama Calon", GENDER_L_P: "L" }];
             const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Template_Caleg");
@@ -3725,11 +3365,10 @@
         function exportExcelCaleg() {
             if(appData.calegs.length === 0) return Swal.fire('Kosong', 'Tidak ada data untuk diexport', 'info');
             const data = appData.calegs.map(c => {
-                const d = appData.dapils.find(x => x.id === c.dapil_id);
                 const p = appData.parties.find(x => x.id === c.party_id);
+                const d = appData.dapils.find(x => x.id === c.dapil_id);
                 return {
-                    NAMA_DAPIL: d ? d.name : c.dapil_id, NAMA_PARTAI: p ? p.name : c.party_id,
-                    NOMOR_URUT_CALEG: c.no_urut, NAMA_CALEG: c.name, GENDER_L_P: c.gender
+                    NAMA_DAPIL: d ? d.name : '', NAMA_PARTAI: p ? p.name : '', NOMOR_URUT: c.no_urut || '', NAMA_CALEG: c.name || '', GENDER_L_P: c.gender || ''
                 };
             });
             const ws = XLSX.utils.json_to_sheet(data);
@@ -3742,38 +3381,31 @@
             const file = e.target.files[0];
             if(!file) return;
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = function(event) {
                 try {
-                    const workbook = XLSX.read(new Uint8Array(e.target.result), {type: 'array'});
-                    const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+                    const data = new Uint8Array(event.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const json = XLSX.utils.sheet_to_json(worksheet);
                     
                     let importedCount = 0;
                     json.forEach(row => {
-                        if(row.NAMA_DAPIL && row.NAMA_PARTAI && row.NAMA_CALEG && row.NOMOR_URUT_CALEG) {
+                        if(row.NAMA_CALEG && row.NAMA_DAPIL && row.NAMA_PARTAI) {
+                            const d = appData.dapils.find(x => x.name.toLowerCase() === row.NAMA_DAPIL.toLowerCase());
+                            const p = appData.parties.find(x => x.name.toLowerCase() === row.NAMA_PARTAI.toLowerCase());
                             
-                            // Cari ID Dapil berdasarkan Nama Dapil
-                            let d = appData.dapils.find(x => x.name.trim().toLowerCase() === String(row.NAMA_DAPIL).trim().toLowerCase());
-                            let d_id = d ? d.id : String(row.NAMA_DAPIL); // Fallback ke string aslinya jika tidak ketemu di master
-                            
-                            // Cari ID Partai berdasarkan Nama Partai
-                            let p = appData.parties.find(x => x.name.trim().toLowerCase() === String(row.NAMA_PARTAI).trim().toLowerCase());
-                            let p_id = p ? p.id : null;
-
-                            if (p_id) { // Wajib ketemu partainya
-                               let numUrut = parseInt(row.NOMOR_URUT_CALEG);
-                               let existing = appData.calegs.find(c => c.dapil_id === d_id && c.party_id === p_id && c.no_urut === numUrut);
-                               
-                               if(existing) {
-                                   existing.name = row.NAMA_CALEG; 
-                                   existing.gender = row.GENDER_L_P || existing.gender || 'L';
-                               } else {
-                                   appData.calegs.push({
-                                       id: 'C' + new Date().getTime() + Math.floor(Math.random() * 1000),
-                                       dapil_id: d_id, party_id: p_id, no_urut: numUrut, name: row.NAMA_CALEG, 
-                                       gender: row.GENDER_L_P || 'L', votes: 0
-                                   });
-                               }
-                               importedCount++;
+                            if(d && p) {
+                                appData.calegs.push({
+                                    id: 'C' + new Date().getTime() + Math.floor(Math.random()*1000),
+                                    dapil_id: d.id,
+                                    party_id: p.id,
+                                    no_urut: parseInt(row.NOMOR_URUT) || 0,
+                                    name: row.NAMA_CALEG || '',
+                                    gender: row.GENDER_L_P === 'P' ? 'P' : 'L',
+                                    votes: 0
+                                });
+                                importedCount++;
                             }
                         }
                     });
@@ -3786,7 +3418,6 @@
             reader.readAsArrayBuffer(file);
             e.target.value = '';
         }
-
     </script>
 </body>
 </html>
