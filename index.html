@@ -86,67 +86,67 @@
 </head>
 <body class="bg-gray-100 text-gray-800 dark:bg-darkbg dark:text-gray-200">
 
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <div class="loader mb-4"></div>
-        <h2 class="text-2xl font-bold tracking-widest text-blue-400">MEMUAT DATA...</h2>
-        <p class="text-sm text-gray-400 mt-2">Menyiapkan Dashboard Quick Count</p>
-    </div>
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="fixed inset-0 bg-white dark:bg-darkbg z-[100] flex flex-col items-center justify-center transition-opacity duration-500">
+            <i class="fa-solid fa-spinner fa-spin text-5xl text-blue-600 mb-4"></i>
+            <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">Memuat Data...</h2>
+        </div>
 
-    <!-- MAIN APP CONTAINER -->
-    <div id="app-container" class="hidden min-h-screen flex flex-col relative">
-
-        <!-- ========================================== -->
-        <!-- PUBLIC VIEW DASHBOARD                      -->
-        <!-- ========================================== -->
-        <div id="public-view" class="flex-grow flex flex-col">
+        <div id="app-container" class="min-h-screen flex flex-col hidden relative">
             
-            <!-- Header -->
+            <!-- Header Publik -->
             <header class="bg-primary text-white shadow-lg sticky top-0 z-50">
-                <div class="container mx-auto px-4 py-2 md:py-3">
-                    <div class="flex flex-row justify-between items-center gap-2 md:gap-4">
-                        <div class="flex items-center gap-3 md:gap-4">
-                            <div class="bg-white p-1.5 md:p-2 rounded-lg shrink-0">
-                                <i class="fa-solid fa-chart-pie text-2xl md:text-3xl text-primary"></i>
+                <!-- Padding sangat minim di HP (px-1.5) -->
+                <div class="container mx-auto px-1.5 sm:px-4 py-1.5 md:py-3">
+                    <div class="flex flex-row justify-between items-center gap-1 md:gap-4">
+                        
+                        <!-- Area Kiri: Logo dan Judul (flex-1 dan min-w-0 MEMAKSA teks memendek/truncate) -->
+                        <div class="flex items-center gap-1.5 sm:gap-4 min-w-0 flex-1">
+                            <div class="bg-white p-1 sm:p-2 rounded sm:rounded-lg shrink-0 flex items-center justify-center">
+                                <i class="fa-solid fa-chart-pie text-xs sm:text-2xl md:text-3xl text-primary"></i>
                             </div>
-                            <div class="min-w-0">
-                                <h1 class="text-lg md:text-3xl font-bold tracking-tight uppercase truncate" id="app-title">QC PILKADA 2026</h1>
-                                <p class="text-[10px] md:text-base text-blue-200 truncate" id="app-subtitle">Pemilihan Anggota DPRD Provinsi - Lembaga Survei Independen</p>
+                            <div class="min-w-0 flex-1 flex flex-col justify-center">
+                                <!-- Font ekstra kecil untuk HP (10px) -->
+                                <h1 class="text-[10px] sm:text-xl md:text-3xl font-black tracking-tighter uppercase truncate leading-none" id="app-title">QC PILKADA 2026</h1>
+                                <!-- Subtitle mikroskopis untuk HP (7px) agar tetap sebaris -->
+                                <p class="text-[7px] sm:text-xs md:text-base text-blue-200 truncate leading-tight mt-0.5 sm:mt-1" id="app-subtitle">Pemilihan Anggota DPRD Provinsi - Lembaga Survei Independen</p>
                             </div>
                         </div>
                         
-                        <div class="flex flex-col items-end gap-1 md:gap-2 shrink-0">
+                        <!-- Area Kanan: Tombol-tombol (shrink-0 MEMAKSA area ini tidak terdorong keluar) -->
+                        <div class="flex flex-col items-end shrink-0 pl-1">
                             <!-- Baris Atas: Ikon Status, Tema, Fullscreen, Admin -->
-                            <div class="flex items-center gap-1 md:gap-2">
-                                <!-- Indikator Database (Titik Saja) -->
-                                <div class="flex items-center justify-center bg-black/20 w-6 h-6 md:w-8 md:h-8 rounded-full border border-white/10 md:mr-1" title="Database Status">
-                                    <span class="relative flex h-2 w-2 md:h-2.5 md:w-2.5">
+                            <div class="flex items-center gap-1 sm:gap-2">
+                                
+                                <!-- Indikator Database (Sangat kecil di HP: w-3 h-3) -->
+                                <div class="flex items-center justify-center bg-black/20 w-3 h-3 sm:w-8 sm:h-8 rounded-full border border-white/10" title="Database Status">
+                                    <span class="relative flex h-1.5 w-1.5 sm:h-2.5 sm:w-2.5">
                                       <span id="db-ping-public" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
-                                      <span id="db-dot-public" class="relative inline-flex rounded-full h-2 w-2 md:h-2.5 md:w-2.5 bg-yellow-500"></span>
+                                      <span id="db-dot-public" class="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2.5 sm:w-2.5 bg-yellow-500"></span>
                                     </span>
                                 </div>
 
-                                <!-- Toggle Auto Refresh -->
-                                <button onclick="toggleAutoRefresh()" class="p-1.5 hover:bg-blue-800 rounded-lg transition flex items-center md:gap-1.5 text-green-400" id="btn-auto-refresh" title="Auto Refresh: ON">
-                                    <i class="fa-solid fa-rotate text-xs md:text-sm"></i>
+                                <!-- Toggle Auto Refresh (Sangat Kecil 8px) -->
+                                <button onclick="toggleAutoRefresh()" class="p-0.5 sm:p-1.5 hover:bg-blue-800 rounded transition flex items-center gap-1 text-green-400" id="btn-auto-refresh" title="Auto Refresh: ON">
+                                    <i class="fa-solid fa-rotate text-[8px] sm:text-sm"></i>
                                     <i class="fa-solid fa-toggle-on text-base md:text-xl hidden md:block" id="icon-toggle-refresh"></i>
                                 </button>
 
-                                <button onclick="toggleTheme()" class="p-1.5 md:p-2 hover:bg-blue-800 rounded-full transition" title="Toggle Dark/Light Mode">
-                                    <i class="fa-solid fa-moon text-sm md:text-base" id="theme-icon"></i>
+                                <button onclick="toggleTheme()" class="p-1 sm:p-2 hover:bg-blue-800 rounded-full transition" title="Toggle Dark/Light Mode">
+                                    <i class="fa-solid fa-moon text-[8px] sm:text-base" id="theme-icon"></i>
                                 </button>
-                                <button onclick="toggleFullscreen()" class="p-1.5 md:p-2 hover:bg-blue-800 rounded-full transition hidden sm:block" title="Fullscreen">
-                                    <i class="fa-solid fa-expand"></i>
+                                <button onclick="toggleFullscreen()" class="p-1 sm:p-2 hover:bg-blue-800 rounded-full transition hidden sm:block" title="Fullscreen">
+                                    <i class="fa-solid fa-expand text-[8px] sm:text-sm"></i>
                                 </button>
-                                <button onclick="openLoginModal()" class="bg-blue-700 hover:bg-blue-600 px-2 py-1 md:px-3 md:py-1.5 rounded md:font-semibold text-xs md:text-sm transition flex items-center shadow-sm ml-1">
-                                    <i class="fa-solid fa-lock md:mr-2"></i> <span class="hidden sm:inline">Admin</span>
+                                <button onclick="openLoginModal()" class="bg-blue-700 hover:bg-blue-600 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded font-bold text-[8px] sm:text-sm transition flex items-center shadow-sm">
+                                    <i class="fa-solid fa-lock md:mr-2 text-[8px] sm:text-sm"></i> <span class="hidden sm:inline">Admin</span>
                                 </button>
                             </div>
                             
-                            <!-- Baris Bawah: Waktu dan Tanggal -->
-                            <div class="text-right hidden sm:block">
+                            <!-- Baris Bawah: Waktu dan Tanggal (Hanya Desktop/Tablet) -->
+                            <div class="text-right hidden sm:block mt-1">
                                 <div class="text-lg font-bold font-mono leading-none tracking-wider" id="realtime-clock">00:00:00</div>
-                                <div class="text-[10px] text-blue-200 mt-1 uppercase tracking-wide" id="realtime-date">Tanggal</div>
+                                <div class="text-[10px] text-blue-200 mt-0.5 uppercase tracking-wide" id="realtime-date">Tanggal</div>
                             </div>
                         </div>
                     </div>
@@ -172,6 +172,131 @@
                 <!-- DAPIL TABS NAVIGATION (Sticky Bottom on Mobile, Regular on Desktop) -->
                 <div class="fixed bottom-0 left-0 right-0 z-40 md:relative md:bottom-auto glass-panel bg-white/95 dark:bg-darkcard/95 border-t border-gray-200 dark:border-gray-800 md:border-t-0 md:border-b-4 md:border-b-blue-600 md:rounded-xl shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] md:shadow-sm p-1.5 md:p-2 overflow-x-auto custom-scrollbar safe-area-pb md:pb-2">
                     <div id="dapil-tabs-nav" class="flex gap-1 md:gap-2 min-w-max mx-auto px-2 md:px-0">
+                        <!-- Tab buttons will be injected here via JS -->
+                    </div>
+                </div>
+
+                <!-- Top Progress & Stats Row (Dinamis Sesuai Dapil) -->
+                <div id="public-stats-container" class="grid grid-cols-1 lg:grid-cols-4 gap-4 transition-all duration-300">
+                    <!-- Progress Card -->
+                    <div class="lg:col-span-2 glass-panel rounded-xl p-5 shadow-sm">
+                        <div class="flex justify-between items-end mb-2">
+                            <h3 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase">Data Masuk Dapil</h3>
+                            <span class="text-3xl font-black text-primary dark:text-blue-400" id="data-masuk-pct">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 mb-2 overflow-hidden">
+                            <div class="bg-gradient-to-r from-blue-600 to-cyan-400 h-4 rounded-full progress-bar-animated" id="data-masuk-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 font-semibold">
+                            <span>TPS Masuk: <span id="tps-masuk-val" class="text-gray-800 dark:text-gray-200">0</span></span>
+                            <span>Total TPS Dapil: <span id="tps-total-val" class="text-gray-800 dark:text-gray-200">0</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Small Stats -->
+                    <div class="glass-panel rounded-xl p-4 shadow-sm border-l-4 border-l-blue-500 flex flex-col justify-center">
+                        <h4 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Margin of Error</h4>
+                        <div class="text-2xl font-bold text-gray-800 dark:text-gray-100" id="stat-moe">0%</div>
+                        <p class="text-[10px] text-gray-400 mt-1">Confidence Lvl: <span id="stat-conf">0%</span></p>
+                    </div>
+                    <div class="glass-panel rounded-xl p-4 shadow-sm border-l-4 border-l-green-500 flex flex-col justify-center">
+                        <h4 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Voter Turn Out</h4>
+                        <div class="text-2xl font-bold text-gray-800 dark:text-gray-100" id="stat-vto">0%</div>
+                        <p class="text-[10px] text-gray-400 mt-1">Partisipasi Pemilih (TPS Masuk)</p>
+                    </div>
+                </div>
+
+                <!-- DAPIL RESULTS CONTAINER -->
+                <div id="dapil-results-container" class="relative min-h-[400px]">
+                    <!-- Dynamic Dapil Tab Contents injected here via JS -->
+                </div>
+
+            </main>
+
+            <!-- Footer -->
+            <!-- Disembunyikan di HP karena ruang sempit dan ada bottom nav, tampil di Desktop -->
+            <footer class="hidden md:block bg-white dark:bg-darkcard border-t border-gray-200 dark:border-gray-800 py-6 mt-auto">
+                <div class="container mx-auto px-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                    <p class="font-semibold text-gray-800 dark:text-gray-200" id="footer-inst">Lembaga Survei Independen Indonesia</p>
+                    <p class="mt-1">Hak Cipta &copy; <span id="current-year"></span>. Sistem Quick Count & Real Count Profesional.</p>
+                </div>
+            </footer>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ADMIN PANEL VIEW (Hidden by default)       -->
+        <!-- ========================================== -->
+        <div id="admin-view" class="hidden flex-grow flex h-screen overflow-hidden bg-gray-50 dark:bg-darkbg relative">
+            
+            <!-- Admin Sidebar (Desktop Only) -->
+            <aside class="hidden md:flex flex-col w-64 bg-primary text-white h-full shrink-0 shadow-xl z-50" id="admin-sidebar">
+                <div class="p-4 border-b border-blue-800 flex justify-between items-center">
+                    <h2 class="text-xl font-bold"><i class="fa-solid fa-user-shield mr-2"></i> QC Admin</h2>
+                    <div class="flex gap-2">
+                        <button onclick="closeAdmin()" class="text-blue-300 hover:text-white" title="Ke Tampilan Publik">
+                            <i class="fa-solid fa-desktop"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <nav class="flex-grow p-4 space-y-1 overflow-y-auto custom-scrollbar">
+                    <button class="admin-nav-btn active w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition bg-blue-800 border-l-4 border-white" data-target="admin-dashboard">
+                        <i class="fa-solid fa-gauge-high w-6"></i> Dashboard
+                    </button>
+                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition text-green-400 font-semibold" data-target="admin-input">
+                        <i class="fa-solid fa-keyboard w-6"></i> Input Suara
+                    </button>
+                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition text-yellow-400 font-semibold" data-target="admin-tabel-suara">
+                        <i class="fa-solid fa-table-list w-6"></i> Tabel Suara
+                    </button>
+                    
+                    <div class="text-xs font-bold text-blue-300 uppercase tracking-wider mt-4 mb-2 px-3">Master Data</div>
+                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-dapil">
+                        <i class="fa-solid fa-map-location-dot w-6"></i> Data Dapil
+                    </button>
+                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-partai">
+                        <i class="fa-solid fa-flag w-6"></i> Data Partai
+                    </button>
+                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-caleg">
+                        <i class="fa-solid fa-users-gear w-6"></i> Data Caleg
+                    </button>
+                    
+                    <div class="text-xs font-bold text-blue-300 uppercase tracking-wider mt-4 mb-2 px-3">Sistem</div>
+                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-settings">
+                        <i class="fa-solid fa-gear w-6"></i> Pengaturan Aplikasi
+                    </button>
+                    <button class="admin-nav-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition" data-target="admin-backup">
+                        <i class="fa-solid fa-database w-6"></i> Backup & Restore
+                    </button>
+                </nav>
+                
+                <div class="p-4 border-t border-blue-800">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center font-bold">A</div>
+                            <div>
+                                <p class="text-sm font-bold">Administrator</p>
+                                <p class="text-[10px] text-green-300"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Online</p>
+                            </div>
+                        </div>
+                        <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300" title="Logout">
+                            <i class="fa-solid fa-power-off"></i>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Admin Main Content -->
+            <main class="flex-grow flex flex-col h-full overflow-hidden bg-gray-100 dark:bg-darkbg w-full md:w-auto relative">
+                <!-- Admin Header -->
+                <header class="bg-white dark:bg-darkcard shadow-sm px-4 md:px-6 py-4 flex justify-between items-center z-10 shrink-0 border-b border-gray-200 dark:border-gray-800">
+                    <div class="flex items-center">
+                        <h2 class="text-lg md:text-xl font-bold text-gray-800 dark:text-white" id="admin-page-title">Dashboard</h2>
+                    </div>
+                    <div class="flex gap-1 md:gap-3 items-center">
+                        <span id="db-badge-admin" class="bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800/50 text-[10px] md:text-xs font-bold px-2 py-1.5 md:px-3 md:py-1.5 rounded-full flex items-center gap-1.5 md:gap-2 border shadow-sm transition-colors duration-300 mr-2 md:mr-0">
+                            <span class="relative flex h-2 w-2 md:h-2.5 md:w-2.5">
+                                <span id="db-ping-admin" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opa-nav" class="flex gap-1 md:gap-2 min-w-max mx-auto px-2 md:px-0">
                         <!-- Tab buttons will be injected here via JS -->
                     </div>
                 </div>
