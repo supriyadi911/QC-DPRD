@@ -992,6 +992,11 @@
         let currentSortAscCaleg = true;
         let currentSortColSuara = 'timestamp';
         let currentSortAscSuara = false;
+        
+        // Variabel untuk menyimpan preferensi jumlah tampilan Caleg per Dapil
+        let dapilCalegLimits = {};
+        // Variabel untuk menyimpan preferensi jumlah tampilan Partai per Dapil
+        let dapilPartyLimits = {};
 
         // --- 2. INITIALIZATION ---
         document.addEventListener("DOMContentLoaded", () => {
@@ -1246,11 +1251,15 @@
         }
 
         function generateDummyData(showAlert = true) {
-            // 1. Generate Parties
-            const partyNames = ["Partai Sejahtera", "Partai Kebangsaan", "Partai Demokrasi", "Partai Karya", "Partai Keadilan", "Partai Persatuan"];
-            const colors = ['#1d4ed8', '#b91c1c', '#047857', '#eab308', '#ea580c', '#4c1d95'];
+            // 1. Generate Parties (Diperbanyak menjadi 24 Partai agar filter 20 partai bisa bekerja & terlihat jelas)
+            const partyNames = [];
+            const colors = ['#1d4ed8', '#b91c1c', '#047857', '#eab308', '#ea580c', '#4c1d95', '#8b5cf6', '#d946ef', '#f43f5e', '#f97316', '#84cc16', '#06b6d4', '#14b8a6', '#0ea5e9', '#6366f1', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e', '#f97316', '#f59e0b'];
+            for(let i = 1; i <= 24; i++) {
+                partyNames.push("Partai Politik " + i);
+            }
+            
             appData.parties = partyNames.map((name, i) => ({
-                id: `P${i+1}`, number: i+1, name: name, color: colors[i], suara_partai: 0
+                id: `P${i+1}`, number: i+1, name: name, color: colors[i % colors.length], suara_partai: 0
             }));
             appData.config.jumlah_partai = partyNames.length;
 
@@ -1286,17 +1295,20 @@
             
             appData.dapils.forEach(dapil => {
                 appData.parties.forEach(party => {
-                    for(let i = 1; i <= Math.min(dapil.seats, 6); i++) {
-                        let nameStr = names[Math.floor(Math.random() * names.length)] + " " + String.fromCharCode(65 + Math.floor(Math.random() * 26));
-                        appData.calegs.push({
-                            id: `C${calegId++}`,
-                            dapil_id: dapil.id,
-                            party_id: party.id,
-                            no_urut: i,
-                            name: nameStr,
-                            votes: 0,
-                            gender: i % 3 === 0 ? 'P' : 'L'
-                        });
+                    // Hanya buat caleg untuk 10 partai pertama agar memori browser tidak terlalu berat
+                    if(party.number <= 10) {
+                        for(let i = 1; i <= Math.min(dapil.seats, 6); i++) {
+                            let nameStr = names[Math.floor(Math.random() * names.length)] + " " + String.fromCharCode(65 + Math.floor(Math.random() * 26));
+                            appData.calegs.push({
+                                id: `C${calegId++}`,
+                                dapil_id: dapil.id,
+                                party_id: party.id,
+                                no_urut: i,
+                                name: nameStr,
+                                votes: 0,
+                                gender: i % 3 === 0 ? 'P' : 'L'
+                            });
+                        }
                     }
                 });
             });
@@ -1513,6 +1525,18 @@
             document.getElementById('stat-vto').textContent = calculatedVto + '%';
         }
 
+        // Fungsi trigger ganti limit jumlah caleg
+        function changeCalegLimit(dapilId, limit) {
+            dapilCalegLimits[dapilId] = parseInt(limit);
+            renderDapilTabsAndContent(); // Render ulang kontainer publik
+        }
+
+        // Fungsi trigger ganti limit jumlah partai
+        function changePartyLimit(dapilId, limit) {
+            dapilPartyLimits[dapilId] = parseInt(limit);
+            renderDapilTabsAndContent(); // Render ulang kontainer publik
+        }
+
         function renderDapilTabsAndContent() {
             const navContainer = document.getElementById('dapil-tabs-nav');
             const contentContainer = document.getElementById('dapil-results-container');
@@ -1584,8 +1608,11 @@
                 partyVotesInDapil.sort((a,b) => b.votes - a.votes);
 
                 // --- 3. Build HTML Blocks ---
+                const currentPartyLimit = dapilPartyLimits[dapil.id] || 10;
+                const partiesToDisplay = partyVotesInDapil.slice(0, currentPartyLimit);
+
                 let partyHtml = '';
-                partyVotesInDapil.forEach((p) => {
+                partiesToDisplay.forEach((p) => {
                     const pct = totalVotesInDapil > 0 ? ((p.votes / totalVotesInDapil) * 100).toFixed(2) : 0;
                     partyHtml += `
                         <tr class="border-b border-gray-200 dark:border-gray-700/50 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
@@ -1606,7 +1633,11 @@
                 let calegHtmlCol1 = '';
                 let calegHtmlCol2 = '';
                 
-                calegsInDapil.slice(0, 10).forEach((c, index) => {
+                const currentLimit = dapilCalegLimits[dapil.id] || 10;
+                const calegsToDisplay = calegsInDapil.slice(0, currentLimit);
+                const halfIndex = Math.ceil(calegsToDisplay.length / 2);
+
+                calegsToDisplay.forEach((c, index) => {
                     const party = appData.parties.find(p => p.id === c.party_id);
                     const pct = totalVotesInDapil > 0 ? ((c.votes / totalVotesInDapil) * 100).toFixed(2) : 0;
                     let rankColor = index === 0 ? 'bg-yellow-100/80 border-yellow-300 text-yellow-800' : index === 1 ? 'bg-gray-200/80 border-gray-300 text-gray-800' : index === 2 ? 'bg-orange-100/80 border-orange-300 text-orange-800' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700';
@@ -1625,8 +1656,8 @@
                         </div>
                     `;
 
-                    // Pisahkan ke kolom kiri (1-5) dan kolom kanan (6-10)
-                    if (index < 5) {
+                    // Pisahkan ke kolom secara seimbang
+                    if (index < halfIndex) {
                         calegHtmlCol1 += cardHtml;
                     } else {
                         calegHtmlCol2 += cardHtml;
@@ -1645,20 +1676,29 @@
 
                 const slResult = calculateSainteLagueLocal(partyVotesInDapil, dapil.seats);
                 let slHtml = '';
+                let partiesWithSeats = 0;
+                
                 slResult.partyResults.forEach(p => {
-                    if(p.seatsWon > 0 || p.votes > 0) {
-                        let rowClass = p.seatsWon > 0 ? 'bg-green-50 dark:bg-green-900/10 font-bold' : 'font-medium text-gray-600 dark:text-gray-400';
+                    // Hanya tampilkan partai yang mendapatkan kursi (seatsWon > 0)
+                    if(p.seatsWon > 0) {
+                        partiesWithSeats++;
+                        let rowClass = 'bg-green-50 dark:bg-green-900/10 font-bold';
                         slHtml += `
                             <tr class="${rowClass} border-b border-gray-200 dark:border-gray-700/50 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
                                 <td class="py-2.5 px-2 text-xs flex items-center gap-2 text-gray-800 dark:text-gray-200"><div class="w-2.5 h-2.5 rounded-full shadow-sm" style="background-color: ${p.color}"></div>${p.name}</td>
                                 <td class="py-2.5 px-2 text-right text-xs opacity-70 font-mono">${p.quotients[0].toLocaleString('id-ID')}</td>
                                 <td class="py-2.5 px-2 text-right text-xs opacity-70 font-mono">${p.quotients[1].toLocaleString('id-ID')}</td>
                                 <td class="py-2.5 px-2 text-right text-xs opacity-70 font-mono">${p.quotients[2].toLocaleString('id-ID')}</td>
-                                <td class="py-2.5 px-2 text-center text-sm font-black ${p.seatsWon > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-300 dark:text-gray-600'}">${p.seatsWon}</td>
+                                <td class="py-2.5 px-2 text-center text-sm font-black text-green-600 dark:text-green-400">${p.seatsWon}</td>
                             </tr>
                         `;
                     }
                 });
+
+                // Tampilkan pesan kosong jika belum ada kursi yang terdistribusi
+                if (partiesWithSeats === 0) {
+                    slHtml = `<tr><td colspan="5" class="text-center py-6 text-xs text-gray-500 italic">Belum ada partai yang diproyeksikan mendapat alokasi kursi.</td></tr>`;
+                }
 
                 const paneClass = isActive ? 'block' : 'hidden';
 
@@ -1678,12 +1718,53 @@
                             </div>
 
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                <!-- Kiri Atas: Suara Partai -->
+                                
+                                <!-- ATAS (Full Lebar): Top X Caleg (Filter View) -->
+                                <div class="lg:col-span-2 pb-6 border-b border-gray-200 dark:border-gray-700">
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-gray-100 dark:bg-gray-800 p-3 rounded-xl mb-4 gap-3">
+                                        <h3 class="flex items-center gap-2 font-black text-slate-800 dark:text-slate-100 text-xs sm:text-sm uppercase tracking-wider">
+                                            <i class="fa-solid fa-trophy text-primary"></i> Top Perolehan Suara Caleg
+                                        </h3>
+                                        <div class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm">
+                                            <label for="limit-${dapil.id}">Tampilkan:</label>
+                                            <select id="limit-${dapil.id}" onchange="changeCalegLimit('${dapil.id}', this.value)" class="bg-transparent cursor-pointer outline-none focus:ring-0 font-black text-primary dark:text-blue-400">
+                                                <option value="10" ${currentLimit === 10 ? 'selected' : ''}>10 Caleg</option>
+                                                <option value="15" ${currentLimit === 15 ? 'selected' : ''}>15 Caleg</option>
+                                                <option value="20" ${currentLimit === 20 ? 'selected' : ''}>20 Caleg</option>
+                                                <option value="25" ${currentLimit === 25 ? 'selected' : ''}>25 Caleg</option>
+                                                <option value="50" ${currentLimit === 50 ? 'selected' : ''}>50 Caleg</option>
+                                                <option value="1000" ${currentLimit === 1000 ? 'selected' : ''}>Semua Caleg</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Grid 2 Kolom -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                                        ${calegHtml}
+                                    </div>
+                                </div>
+
+                                <!-- BAWAH KIRI: Suara Partai -->
                                 <div>
-                                    <h3 class="text-sm font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center bg-gray-100 dark:bg-gray-800 p-2 rounded-lg"><i class="fa-solid fa-chart-bar text-primary mr-2"></i> Perolehan Suara Partai</h3>
-                                    <div class="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-gray-100 dark:bg-gray-800 p-3 rounded-xl mb-4 gap-3">
+                                        <h3 class="flex items-center gap-2 font-black text-slate-800 dark:text-slate-100 text-xs sm:text-sm uppercase tracking-wider">
+                                            <i class="fa-solid fa-chart-bar text-primary"></i> Perolehan Suara Partai
+                                        </h3>
+                                        <div class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm">
+                                            <label for="limit-party-${dapil.id}">Tampilkan:</label>
+                                            <select id="limit-party-${dapil.id}" onchange="changePartyLimit('${dapil.id}', this.value)" class="bg-transparent cursor-pointer outline-none focus:ring-0 font-black text-primary dark:text-blue-400">
+                                                <option value="10" ${currentPartyLimit === 10 ? 'selected' : ''}>10 Partai</option>
+                                                <option value="15" ${currentPartyLimit === 15 ? 'selected' : ''}>15 Partai</option>
+                                                <option value="20" ${currentPartyLimit === 20 ? 'selected' : ''}>20 Partai</option>
+                                                <option value="25" ${currentPartyLimit === 25 ? 'selected' : ''}>25 Partai</option>
+                                                <option value="50" ${currentPartyLimit === 50 ? 'selected' : ''}>50 Partai</option>
+                                                <option value="1000" ${currentPartyLimit === 1000 ? 'selected' : ''}>Semua Partai</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Diperbarui: overflow-y-auto max-h-[400px] dengan custom scrollbar agar tidak melar ke bawah -->
+                                    <div class="overflow-x-auto overflow-y-auto max-h-[400px] custom-scrollbar border border-gray-200 dark:border-gray-700 rounded-lg relative">
                                         <table class="w-full text-left">
-                                            <thead class="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-[10px] uppercase font-bold tracking-wider">
+                                            <thead class="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-[10px] uppercase font-bold tracking-wider sticky top-0 z-10 shadow-[0_1px_0_0_#e2e8f0] dark:shadow-[0_1px_0_0_#334155]">
                                                 <tr>
                                                     <th class="py-2.5 px-2 text-center">No</th>
                                                     <th class="py-2.5 px-2">Partai</th>
@@ -1696,7 +1777,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Kanan Atas: Proyeksi Kursi Sainte Lague -->
+                                <!-- BAWAH KANAN: Proyeksi Kursi Sainte Lague -->
                                 <div>
                                     <h3 class="text-sm font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center bg-gray-100 dark:bg-gray-800 p-2 rounded-lg"><i class="fa-solid fa-calculator text-primary mr-2"></i> Proyeksi Kursi (Sainte-Laguë)</h3>
                                     <div class="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
@@ -1712,15 +1793,6 @@
                                             </thead>
                                             <tbody>${slHtml}</tbody>
                                         </table>
-                                    </div>
-                                </div>
-
-                                <!-- Bawah (Full Lebar): Top 10 Caleg (5 Baris x 2 Kolom) -->
-                                <div class="lg:col-span-2 pt-4 border-t border-gray-200 dark:border-gray-700">
-                                    <h3 class="text-sm font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center bg-gray-100 dark:bg-gray-800 p-2 rounded-lg"><i class="fa-solid fa-users text-primary mr-2"></i> Top 10 Caleg</h3>
-                                    <!-- Grid 2 Kolom -->
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
-                                        ${calegHtml}
                                     </div>
                                 </div>
                             </div>
